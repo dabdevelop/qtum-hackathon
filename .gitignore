@@ -1,0 +1,11 @@
+# file types
+
+*.xml
+*.pyc
+
+# folders
+.idea
+node_modules/
+_mac
+inspection/
+solidity/build/

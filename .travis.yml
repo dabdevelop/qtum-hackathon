@@ -1,0 +1,12 @@
+language: node_js
+os: osx
+before_install:
+  - brew update
+  - brew upgrade node
+  - nvm use system
+  - npm install -g truffle
+  - npm install -g ethereumjs-testrpc
+before_script:
+  - npm start &
+script: npm test
+
