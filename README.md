@@ -60,7 +60,7 @@ To deploy, execute the following commands from the project's truffle folder.
 
 The structure of DAB  is showed in the grph.
 
-![alt text](https://github.com/dabdevelop/contracts/raw/master/solidity/graphs/DAB_Hierarchy.jpg "DAB Hierarchy")
+![alt text](https://github.com/dabdevelop/qtum-hackathon/raw/master/solidity/graphs/DAB_Hierarchy.jpg "DAB Hierarchy")
 
 The deployer does some configurations after migration, the logic is like codes below.
 
