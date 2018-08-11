@@ -14,7 +14,7 @@ contract TwoYearLoanPlanFormula is LoanPlanFormula {
 /**
     @dev constructor
 */
-    function TwoYearLoanPlanFormula(){
+    function TwoYearLoanPlanFormula() {
         highRate = EtherToFloat(480000000000000000);   // 48%
         lowRate = EtherToFloat(120000000000000000);    // 12%
         loanDays = 2 years;

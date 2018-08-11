@@ -67,13 +67,13 @@ contract DAB is IDAB, DABOperationManager {
         discreditToken = creditAgent.discreditToken();
     }
 
-// verifies that an amount is greater than zero
+// verifies that contract is active
     modifier active() {
         assert(isActive == true);
         _;
     }
 
-// verifies that an amount is greater than zero
+// verifies that contract is inactive
     modifier inactive() {
         assert(isActive == false);
         _;
