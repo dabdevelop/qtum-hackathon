@@ -30,7 +30,7 @@ contract DABAgent is Owned, SafeMath {
     @dev constructor
 
     @param _formula      DAB formula
-    @param _formula      beneficiary address
+    @param _beneficiary      beneficiary address
 */
     function DABAgent(
     IDABFormula _formula,
