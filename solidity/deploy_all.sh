@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# use "solc --bin --asm --evm-version homestead"
+
 export QTUM_SENDER=qeDKhVC2rqpWQpwty52UsE9Nsi1jUarsyJ
 export QTUM_RPC=http://qtum:test@localhost:3889
 export GAS_LIMIT=40000000
@@ -42,11 +45,18 @@ echo deploy contracts/DABCreditAgent.sol '['$EasyDABFormulaAddress', '$CreditTok
 
 solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT contracts/DABCreditAgent.sol '['$EasyDABFormulaAddress', '$CreditTokenControllerAddress', '$SubCreditTokenControllerAddress', '$DiscreditTokenControllerAddress', "'$BeneficiaryAddress'"]'
 
-# DABCreditAgentAddress=0xe28f6f97eb10fcb9b0edcf3a96e147f6fada72a7
+DABCreditAgentAddress=`cat solar.development.json |jq '.contracts."contracts/DABCreditAgent.sol".address'`
 
-# solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT contracts/DABDepositAgent.sol '["'$DiscreditTokenAddress'"]'
+echo deploy contracts/DABDepositAgent.sol '['$DiscreditTokenAddress', '$EasyDABFormulaAddress', '$DepositTokenControllerAddress', "'$BeneficiaryAddress'"]'
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT contracts/DABDepositAgent.sol '['$DiscreditTokenAddress', '$EasyDABFormulaAddress', '$DepositTokenControllerAddress', "'$BeneficiaryAddress'"]'
 
-# solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT contracts/DAB.sol '["'$DiscreditTokenAddress'"]'
+DABDepositAgentAddress=`cat solar.development.json |jq '.contracts."contracts/DABDepositAgent.sol".address'`
+
+now=`date +%s`
+startTime=`expr $now + 60`
+
+echo deploy contracts/DAB.sol '['$DABDepositAgentAddress', '$DABCreditAgentAddress', '$startTime']'
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT contracts/DAB.sol '['$DABDepositAgentAddress', '$DABCreditAgentAddress', '$startTime']'
 
 
 

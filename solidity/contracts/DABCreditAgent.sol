@@ -340,7 +340,7 @@ contract DABCreditAgent is DABAgent {
         subCreditTokenController.issueTokens(_wallet, sctAmount);
         subCredit.supply = safeAdd(subCredit.supply, sctAmount);
 
-        _wallet.transfer(ethAmount);
+        address(_wallet).transfer(ethAmount);
         balance = safeSub(balance, ethAmount);
 
         depositAgent.depositInterest.gas(250000).value(ethInterest)();

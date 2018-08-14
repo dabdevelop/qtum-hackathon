@@ -1,5 +1,11 @@
 #!/bin/bash
 
+alias solc="solc --bin --asm --evm-version homestead"
+
+if [ -d "build" ]; then
+	rm -rf build
+fi
+
 solc ..=.. --optimize --bin --abi --hashes --allow-paths contracts -o build --overwrite contracts/EasyDABFormula.sol
 solc ..=.. --optimize --bin --abi --hashes --allow-paths contracts -o build --overwrite contracts/DepositToken.sol
 solc ..=.. --optimize --bin --abi --hashes --allow-paths contracts -o build --overwrite contracts/CreditToken.sol
