@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# use "solc --bin --asm --evm-version homestead"
+# json parser need to pre-install jq https://github.com/stedolan/jq
+# solc should use option `--evm-version homestead `
 
 export QTUM_SENDER=qeDKhVC2rqpWQpwty52UsE9Nsi1jUarsyJ
 export QTUM_RPC=http://qtum:test@localhost:3889
