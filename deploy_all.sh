@@ -9,6 +9,15 @@ export GAS_LIMIT=40000000
 
 SOURCE_DIR=solidity/contracts
 
+echo deploy $SOURCE_DIR/AMonthLoanPlanFormula.sol
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/AMonthLoanPlanFormula.sol
+echo deploy $SOURCE_DIR/HalfAYearLoanPlanFormula.sol
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/HalfAYearLoanPlanFormula.sol
+echo deploy $SOURCE_DIR/AYearLoanPlanFormula.sol
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/AYearLoanPlanFormula.sol
+echo deploy $SOURCE_DIR/TwoYearLoanPlanFormula.sol
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/TwoYearLoanPlanFormula.sol
+
 echo deploy $SOURCE_DIR/EasyDABFormula.sol
 solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/EasyDABFormula.sol
 
@@ -61,7 +70,10 @@ startTime=`expr $now + 60`
 echo deploy $SOURCE_DIR/DAB.sol '['$DABDepositAgentAddress', '$DABCreditAgentAddress', '$startTime']'
 solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/DAB.sol '['$DABDepositAgentAddress', '$DABCreditAgentAddress', '$startTime']'
 
+DABAddress=`cat solar.development.json |jq '.contracts."'$SOURCE_DIR'/DAB.sol".address'`
 
+echo deploy $SOURCE_DIR/DABWalletFactory.sol '['$DABAddress']'
+solar deploy --qtum_rpc=$QTUM_RPC --force --gasLimit=$GAS_LIMIT $SOURCE_DIR/DABWalletFactory.sol '['$DABAddress']'
 
 
 
