@@ -5,11 +5,11 @@ import './IProposal.sol';
 import './ISmartToken.sol';
 
 
-contract IDABDao {
+contract IDABDao{
 
-    function depositToken() public constant returns (ISmartToken depositToken) {depositToken;}
+    function depositToken() public pure returns (ISmartToken depositToken){depositToken;}
 
-    function proposalPrice() public constant returns (uint256 proposalPrice) {proposalPrice;}
+    function proposalPrice() public pure returns (uint256 proposalPrice) {proposalPrice;}
 
     function propose(IProposal proposal) public;
 

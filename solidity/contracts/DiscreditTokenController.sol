@@ -14,7 +14,8 @@ contract DiscreditTokenController is SmartTokenController {
 
     @param _token   discredit token
 */
-    function DiscreditTokenController(ISmartToken _token)
+    constructor(ISmartToken _token)
+    public
     SmartTokenController(_token) 
     {}
 }

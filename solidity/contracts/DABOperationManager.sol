@@ -26,8 +26,9 @@ contract DABOperationManager is Owned, SafeMath {
 
     @param _startTime      activation start time
 */
-    function DABOperationManager(
+    constructor(
     uint256 _startTime)
+    public
     earlierThan(_startTime)
     {
         activationStartTime = _startTime;
@@ -53,7 +54,6 @@ contract DABOperationManager is Owned, SafeMath {
         require(now > _time);
         _;
     }
-
 
     // ensures that deposit contract started
     modifier started() {
@@ -84,7 +84,6 @@ contract DABOperationManager is Owned, SafeMath {
         require(_address != 0x0);
         _;
     }
-
 
     // verifies that the address is different than this contract address
     modifier notThis(address _address) {

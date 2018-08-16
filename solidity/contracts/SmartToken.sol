@@ -29,11 +29,12 @@ contract SmartToken is ISmartToken, Owned, ERC20Token, TokenHolder {
     @param _symbol     token short symbol, 1-6 characters
     @param _decimals   for display purposes only
 */
-    function SmartToken(string _name, string _symbol, uint8 _decimals)
+    constructor(string _name, string _symbol, uint8 _decimals)
+    public
     ERC20Token(_name, _symbol, _decimals)
     {
         require(bytes(_symbol).length <= 6); // validate input
-        NewSmartToken(address(this));
+        emit NewSmartToken(address(this));
     }
 
 // allows execution only when transfers aren't disabled
@@ -68,8 +69,8 @@ contract SmartToken is ISmartToken, Owned, ERC20Token, TokenHolder {
         totalSupply = safeAdd(totalSupply, _amount);
         balanceOf[_to] = safeAdd(balanceOf[_to], _amount);
 
-        Issuance(_amount);
-        Transfer(this, _to, _amount);
+        emit Issuance(_amount);
+        emit Transfer(this, _to, _amount);
     }
 
 /**
@@ -84,8 +85,8 @@ contract SmartToken is ISmartToken, Owned, ERC20Token, TokenHolder {
         balanceOf[_from] = safeSub(balanceOf[_from], _amount);
         totalSupply = safeSub(totalSupply, _amount);
 
-        Transfer(_from, this, _amount);
-        Destruction(_amount);
+        emit Transfer(_from, this, _amount);
+        emit Destruction(_amount);
     }
 
 // ERC20 standard method overrides with some extra functionality

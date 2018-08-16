@@ -14,7 +14,8 @@ contract CreditTokenController is SmartTokenController {
 
     @param _token   credit token
 */
-    function CreditTokenController(ISmartToken _token)
+    constructor(ISmartToken _token)
+    public
     SmartTokenController(_token) 
     {}
 }

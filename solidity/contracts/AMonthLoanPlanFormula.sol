@@ -14,7 +14,7 @@ contract AMonthLoanPlanFormula is LoanPlanFormula {
 /**
     @dev constructor
 */
-    function AMonthLoanPlanFormula() {
+    constructor() public {
         highRate = EtherToFloat(20000000000000000);  // 2%
         lowRate = EtherToFloat(5000000000000000);    // 0.5%
         loanDays = 30 days;

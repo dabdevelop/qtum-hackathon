@@ -14,17 +14,17 @@ import './Math.sol';
 
 contract EasyDABFormula is IDABFormula, Math {
     string public version = "0.1";
-    uint256 public a = EtherToFloat(600000000000000000);                // a = 0.6
-    uint256 public b = EtherToFloat(200000000000000000);                // b = 0.2
+    uint256 public a = DecimalToFloat(60000000);                // a = 0.6
+    uint256 public b = DecimalToFloat(20000000);                // b = 0.2
     uint256 public l = Float(30000000);                                 // l = 30000000
     uint256 public d = l / 4;                                           // d = l/4
-    uint256 public ip = EtherToFloat(10000000000000000);                // dpt_ip = 0.01  initial price of deposit token
+    uint256 public ip = DecimalToFloat(1000000);                // dpt_ip = 0.01  initial price of deposit token
     uint256 public cdt_ip = ip * 2;                                     // cdt_ip = 0.02  initial price of credit token
     uint256 public cdt_crr = Float(3);                                  // cdt_crr = 3
-    uint256 public cdtCashFeeRate = EtherToFloat(100000000000000000);   // fee rate = 0.1
+    uint256 public cdtCashFeeRate = DecimalToFloat(10000000);   // fee rate = 0.1
     uint256 public cdtLoanRate = ip;                                    // credit token to ether ratio
-    uint256 public cdtReserveRate = EtherToFloat(500000000000000000);   // credit token reserve = 0.5, credit token reserve the rate of interest to expand itself
-    uint256 public sctToDCTRate = EtherToFloat(800000000000000000);     // subCredit token to discredit token ratio = 0.8
+    uint256 public cdtReserveRate = DecimalToFloat(50000000);   // credit token reserve = 0.5, credit token reserve the rate of interest to expand itself
+    uint256 public sctToDCTRate = DecimalToFloat(80000000);     // subCredit token to discredit token ratio = 0.8
     uint256 public maxETH = mul(div(l, Float(1000)), ip);               // max ETH deposit to meet the formula accuracy
     uint256 public maxDPT = mul(div(l, Float(1000)), b);                // max DPT withdraw to meet the formula accuracy
 
@@ -55,7 +55,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function issue(uint256 _dptCirculation, uint256 _ethAmount)
     public
-    constant
+    view
     returns (uint256, uint256, uint256, uint256, uint256, uint256)
     {
         _dptCirculation = EtherToFloat(_dptCirculation);
@@ -90,7 +90,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function deposit(uint256 _ethBalance, uint256 _dptSupply, uint256 _dptCirculation, uint256 _ethAmount)
     public
-    constant
+    view
     returns (uint256 dptAmount, uint256 ethRemain, uint256 dCRR, uint256 dptPrice)
     {
         _ethBalance = EtherToFloat(_ethBalance);
@@ -139,14 +139,14 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function withdraw(uint256 _ethBalance, uint256 _dptCirculation, uint256 _dptAmount)
     public
-    constant
+    view
     returns (uint256 ethAmount, uint256 dCRR, uint256 dptPrice)
     {
         _ethBalance = EtherToFloat(_ethBalance);
         _dptCirculation = EtherToFloat(_dptCirculation);
         _dptAmount = EtherToFloat(_dptAmount);
 
-        require(_ethBalance > 0 );
+        require(_ethBalance > 0);
         require(_dptCirculation > 0);
         require(_dptAmount > 0);
     // ensure the accuracy of the formula
@@ -173,7 +173,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function cash(uint256 _ethBalance, uint256 _cdtSupply, uint256 _cdtAmount)
     public
-    constant
+    view
     returns (uint256 ethAmount, uint256 cdtPrice)
     {
         _ethBalance = EtherToFloat(_ethBalance);
@@ -210,7 +210,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function loan(uint256 _cdtAmount, uint256 _interestRate, uint256 _dptCRR)
     public
-    constant
+    view
     returns (uint256 ethAmount, uint256 ethInterest, uint256 cdtIssuanceAmount, uint256 sctAmount)
     {
         _cdtAmount = EtherToFloat(_cdtAmount);
@@ -246,7 +246,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function repay(uint256 _ethRepayAmount, uint256 _sctAmount)
     public
-    constant
+    view
     returns (uint256 ethRefundAmount, uint256 cdtAmount, uint256 sctRefundAmount)
     {
         _ethRepayAmount = EtherToFloat(_ethRepayAmount);
@@ -268,8 +268,6 @@ contract EasyDABFormula is IDABFormula, Math {
         }
     }
 
-
-
 /*
     @dev calculate the amount of conversion from discredit token to credit token
 
@@ -282,7 +280,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function toCreditToken(uint256 _ethCreditAmount, uint256 _dctAmount)
     public
-    constant
+    view
     returns (uint256 ethRefundAmount, uint256 cdtAmount, uint256 dctRefundAmount)
     {
         _ethCreditAmount = EtherToFloat(_ethCreditAmount);
@@ -304,7 +302,6 @@ contract EasyDABFormula is IDABFormula, Math {
         }
     }
 
-
 /*
     @dev calculate the amount of conversion from sub-credit token to discredit token
 
@@ -317,7 +314,7 @@ contract EasyDABFormula is IDABFormula, Math {
 */
     function toDiscreditToken(uint256 _ethBalance, uint256 _cdtSupply, uint256 _sctAmount)
     public
-    constant
+    view
     returns (uint256 dctAmount, uint256 cdtPrice)
     {
         _ethBalance = EtherToFloat(_ethBalance);
@@ -332,6 +329,4 @@ contract EasyDABFormula is IDABFormula, Math {
 
         return (FloatToEther(mul(_sctAmount, sctToDCTRate)), FloatToDecimal(cdtPrice));
     }
-
-
 }

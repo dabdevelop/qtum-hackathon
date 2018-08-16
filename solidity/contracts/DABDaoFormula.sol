@@ -14,8 +14,7 @@ contract DABDaoFormula is Math {
 /**
     @dev constructor
 */
-    function DABDaoFormula() {}
-
+    constructor() public {}
 
 /**
     @dev to verifies if the support rate is enough

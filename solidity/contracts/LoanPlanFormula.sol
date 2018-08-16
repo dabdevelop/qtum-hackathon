@@ -15,8 +15,7 @@ contract LoanPlanFormula is ILoanPlanFormula, Math {
 /**
     @dev constructor
 */
-    function LoanPlanFormula() {}
-
+    constructor() public {}
 
 /*
 @dev get the loan plan according to loan days, credit token supply and circulation
@@ -27,9 +26,8 @@ contract LoanPlanFormula is ILoanPlanFormula, Math {
 @return loan days
 @return exempt days
 */
-
     function getLoanPlan(uint256 _supply, uint256 _circulation)
-    public constant
+    public view
     returns (uint256, uint256, uint256)
     {
 

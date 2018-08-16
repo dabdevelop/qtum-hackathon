@@ -36,11 +36,12 @@ contract DABDepositAgent is DABAgent {
     @param _beneficiary address of beneficiary
 
 */
-    function DABDepositAgent(
+    constructor(
     DABCreditAgent _creditAgent,
     IDABFormula _formula,
     SmartTokenController _depositTokenController,
     address _beneficiary)
+    public
     validAddress(_creditAgent)
     validAddress(_depositTokenController)
     DABAgent(_formula, _beneficiary)
@@ -62,7 +63,6 @@ contract DABDepositAgent is DABAgent {
         assert(msg.sender == address(creditAgent));
         _;
     }
-
 
 /**
     @dev activate the contract
@@ -120,7 +120,6 @@ contract DABDepositAgent is DABAgent {
         depositTokenController.acceptOwnership();
     }
 
-
 /**
     @dev buys the token by depositing one of its reserve tokens
     only owner can call this function
@@ -137,7 +136,7 @@ contract DABDepositAgent is DABAgent {
     {
         Token storage deposit = tokens[depositToken];
 
-        var (uDPTAmount, uCDTAmount, fDPTAmount, fCDTAmount, ethDeposit, dCRR) = formula.issue(safeSub(deposit.supply, depositBalance), _ethAmount);
+        (uint256 uDPTAmount, uint256 uCDTAmount, uint256 fDPTAmount, uint256 fCDTAmount, uint256 ethDeposit, uint256 dCRR) = formula.issue(safeSub(deposit.supply, depositBalance), _ethAmount);
 
         assert(_ethAmount > ethDeposit);
         assert(uDPTAmount > 0);
@@ -159,13 +158,12 @@ contract DABDepositAgent is DABAgent {
         balance = safeAdd(balance, ethDeposit);
 
     // event
-        LogDPTIssue(_user, ethDeposit, uDPTAmount);
-        LogDPTIssue(beneficiary, 0, fDPTAmount);
+        emit LogDPTIssue(_user, ethDeposit, uDPTAmount);
+        emit LogDPTIssue(beneficiary, 0, fDPTAmount);
 
     // issue new funds to the caller in the smart token
         return true;
     }
-
 
 /**
     @dev deposit ETH
@@ -194,7 +192,7 @@ contract DABDepositAgent is DABAgent {
                 assert(issue(_user, msg.value));
                 return true;
             } else {
-                var (dptAmount, ethRemain, dCRR, dptPrice) = formula.deposit(balance, deposit.supply, safeSub(deposit.supply, depositBalance), msg.value);
+                (uint256 dptAmount, uint256 ethRemain, uint256 dCRR, uint256 dptPrice) = formula.deposit(balance, deposit.supply, safeSub(deposit.supply, depositBalance), msg.value);
 
                 assert((dptAmount == 0 && ethRemain == msg.value) || (dptAmount > 0 && ethRemain < msg.value));
 
@@ -208,7 +206,7 @@ contract DABDepositAgent is DABAgent {
                     balance = safeAdd(balance, safeSub(msg.value, ethRemain));
 
                 // event
-                    LogDeposit(_user, safeSub(msg.value, ethRemain), dptAmount);
+                    emit LogDeposit(_user, safeSub(msg.value, ethRemain), dptAmount);
                 }
                 if (ethRemain > 0) {
                     assert(issue(_user, ethRemain));
@@ -220,7 +218,6 @@ contract DABDepositAgent is DABAgent {
             return true;
         }
     }
-
 
 /**
     @dev withdraw ETH
@@ -242,7 +239,7 @@ contract DABDepositAgent is DABAgent {
 
         depositBalance = depositToken.balanceOf(this);
 
-        var (ethAmount, dCRR, dptPrice) = formula.withdraw(balance, safeSub(deposit.supply, depositBalance), _dptAmount);
+        (uint256 ethAmount, uint256 dCRR, uint256 dptPrice) = formula.withdraw(balance, safeSub(deposit.supply, depositBalance), _dptAmount);
 
         assert(ethAmount > 0);
 
@@ -256,7 +253,7 @@ contract DABDepositAgent is DABAgent {
         balance = safeSub(balance, ethAmount);
 
     // event
-        LogWithdraw(_user, _dptAmount, ethAmount);
+        emit LogWithdraw(_user, _dptAmount, ethAmount);
         return true;
     }
 
@@ -269,7 +266,7 @@ contract DABDepositAgent is DABAgent {
     {
         balance = safeAdd(balance, msg.value);
         interest = safeAdd(interest, msg.value);
-        LogDepositInterest(msg.value);
+        emit LogDepositInterest(msg.value);
     }
 
 }

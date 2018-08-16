@@ -176,45 +176,60 @@ async function activate(fromAddr, target){
   await confirmation
 }
 
+async function deposit(fromAddr, target, amount){
+  const tx = await target.send("deposit", "", {
+    senderAddress: fromAddr,
+    gasLimit: 1000000,
+    amount: amount
+  })
+  console.log("send tx:", tx.txid)
+  // console.log(tx)
+  const confirmation = tx.confirm(1)
+  ora.promise(confirmation, "confirm deposit")
+  await confirmation
+}
+
 async function deploy(){
-  // await transferOwnership(fromAddr, DepositToken, DepositTokenController)
-  // await transferOwnership(fromAddr, CreditToken, CreditTokenController)
-  // await transferOwnership(fromAddr, SubCreditToken, SubCreditTokenController)
-  // await transferOwnership(fromAddr, DiscreditToken, DiscreditTokenController)
+  await transferOwnership(fromAddr, DepositToken, DepositTokenController)
+  await transferOwnership(fromAddr, CreditToken, CreditTokenController)
+  await transferOwnership(fromAddr, SubCreditToken, SubCreditTokenController)
+  await transferOwnership(fromAddr, DiscreditToken, DiscreditTokenController)
 
-  // await acceptTokenOwnership(fromAddr, DepositTokenController)
-  // await acceptTokenOwnership(fromAddr, CreditTokenController)
-  // await acceptTokenOwnership(fromAddr, SubCreditTokenController)
-  // await acceptTokenOwnership(fromAddr, DiscreditTokenController)
+  await acceptTokenOwnership(fromAddr, DepositTokenController)
+  await acceptTokenOwnership(fromAddr, CreditTokenController)
+  await acceptTokenOwnership(fromAddr, SubCreditTokenController)
+  await acceptTokenOwnership(fromAddr, DiscreditTokenController)
   
-  // await transferOwnership(fromAddr, DepositTokenController, DABDepositAgent)
-  // await transferOwnership(fromAddr, CreditTokenController, DABCreditAgent)
-  // await transferOwnership(fromAddr, SubCreditTokenController, DABCreditAgent)
-  // await transferOwnership(fromAddr, DiscreditTokenController, DABCreditAgent)
+  await transferOwnership(fromAddr, DepositTokenController, DABDepositAgent)
+  await transferOwnership(fromAddr, CreditTokenController, DABCreditAgent)
+  await transferOwnership(fromAddr, SubCreditTokenController, DABCreditAgent)
+  await transferOwnership(fromAddr, DiscreditTokenController, DABCreditAgent)
 
-  // await acceptDepositTokenControllerOwnership(fromAddr, DABDepositAgent)
-  // await acceptCreditTokenControllerOwnership(fromAddr, DABCreditAgent)
-  // await acceptSubCreditTokenControllerOwnership(fromAddr, DABCreditAgent)
-  // await acceptDiscreditTokenControllerOwnership(fromAddr, DABCreditAgent)
+  await acceptDepositTokenControllerOwnership(fromAddr, DABDepositAgent)
+  await acceptCreditTokenControllerOwnership(fromAddr, DABCreditAgent)
+  await acceptSubCreditTokenControllerOwnership(fromAddr, DABCreditAgent)
+  await acceptDiscreditTokenControllerOwnership(fromAddr, DABCreditAgent)
 
-  // await setDepositAgent(fromAddr, DABCreditAgent, DABDepositAgent)
+  await setDepositAgent(fromAddr, DABCreditAgent, DABDepositAgent)
 
-  // await transferOwnership(fromAddr, DABDepositAgent, DAB)
-  // await transferOwnership(fromAddr, DABCreditAgent, DAB)
-  // await transferOwnership(fromAddr, DABWalletFactory, DAB)
+  await transferOwnership(fromAddr, DABDepositAgent, DAB)
+  await transferOwnership(fromAddr, DABCreditAgent, DAB)
+  await transferOwnership(fromAddr, DABWalletFactory, DAB)
 
-  // await acceptDepositAgentOwnership(fromAddr, DAB)
-  // await acceptCreditAgentOwnership(fromAddr, DAB)
+  await acceptDepositAgentOwnership(fromAddr, DAB)
+  await acceptCreditAgentOwnership(fromAddr, DAB)
 
-  // await setDABWalletFactory(fromAddr, DAB, DABWalletFactory)
-  // await acceptDABWalletFactoryOwnership(fromAddr, DAB)
+  await setDABWalletFactory(fromAddr, DAB, DABWalletFactory)
+  await acceptDABWalletFactoryOwnership(fromAddr, DAB)
 
-  // await addLoanPlanFormula(fromAddr, DAB, AMonthLoanPlanFormula)
-  // await addLoanPlanFormula(fromAddr, DAB, HalfAYearLoanPlanFormula)
-  // await addLoanPlanFormula(fromAddr, DAB, AYearLoanPlanFormula)
-  // await addLoanPlanFormula(fromAddr, DAB, TwoYearLoanPlanFormula)
+  await addLoanPlanFormula(fromAddr, DAB, AMonthLoanPlanFormula)
+  await addLoanPlanFormula(fromAddr, DAB, HalfAYearLoanPlanFormula)
+  await addLoanPlanFormula(fromAddr, DAB, AYearLoanPlanFormula)
+  await addLoanPlanFormula(fromAddr, DAB, TwoYearLoanPlanFormula)
 
   await activate(fromAddr, DAB)
+
+  await deposit(fromAddr, DAB, 1)
 }
 
 deploy()

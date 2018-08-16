@@ -57,7 +57,7 @@ class EasyDABFormula(object):
         self.CDT_CASHFEE = 0.1   # Fee ration of cash
         self.CDT_RESERVE = 0.5   # the interest reserved in CDT contract, remaining part are to DPT contract
 
-        self.ether = 10 ** 18 * 1.0
+        self.ether = 10 ** 8 * 1.0
         self.decimal = 10 ** 8 * 1.0
 
         self.max_deposit = self.l / 1000 * self.DPTIP   # Maximum Deposit Amount in Ether, to Avoid Big Changes on CRR

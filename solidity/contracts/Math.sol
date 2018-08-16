@@ -12,7 +12,7 @@ contract Math is SafeMath {
     uint256 constant SUB_PRECISION = 48;  // fractional bits
     uint256 constant DECIMAL = 8;
     uint256 constant DECIMAL_ONE = uint256(100000000);
-    uint256 constant ETHER_ONE = uint256(1000000000000000000);
+    uint256 constant ETHER_ONE = uint256(100000000);
     uint256 constant FLOAT_ONE = uint256(1) << PRECISION;
     uint256 constant ETHER_DECIMAL = ETHER_ONE/DECIMAL_ONE;
     uint256 constant FLOAT_DECIMAL = FLOAT_ONE/DECIMAL_ONE;
@@ -34,7 +34,7 @@ contract Math is SafeMath {
     The values below depend on MIN_PRECISION and MAX_PRECISION. If you choose to change either one of them:
     Apply the same change in file 'PrintFunctionFormula.py', run it and paste the printed results below.
 */
-    function Math() {
+    constructor() public {
         maxExpArray[32] = 0x386bfdba29;
         maxExpArray[33] = 0x6c3390ecc8;
         maxExpArray[34] = 0xcf8014760f;
@@ -138,7 +138,7 @@ contract Math is SafeMath {
 
     @return Float
 */
-    function Float(uint256 _int) internal constant returns (uint256) {
+    function Float(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_F);
         if (_int == 0) {
             return 0;
@@ -152,7 +152,7 @@ contract Math is SafeMath {
 
     @return Decimal
 */
-    function Decimal(uint256 _int) internal constant returns (uint256) {
+    function Decimal(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_D);
         if (_int == 0) {
             return 0;
@@ -161,13 +161,12 @@ contract Math is SafeMath {
         }
     }
 
-
 /**
     @dev cast the Float to Decimal
 
     @return Decimal
 */
-    function FloatToDecimal(uint256 _int) internal constant returns (uint256) {
+    function FloatToDecimal(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_DF);
         return (safeMul(_int, DECIMAL_ONE)) >> PRECISION;
     }
@@ -177,7 +176,7 @@ contract Math is SafeMath {
 
     @return Float
 */
-    function DecimalToFloat(uint256 _int) internal constant returns (uint256) {
+    function DecimalToFloat(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_DF);
         return safeDiv((_int << PRECISION), DECIMAL_ONE);
     }
@@ -187,7 +186,7 @@ contract Math is SafeMath {
 
     @return Decimal
 */
-    function EtherToDecimal(uint256 _int) internal constant returns (uint256) {
+    function EtherToDecimal(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_DE);
         return safeDiv(_int, ETHER_DECIMAL);
     }
@@ -197,7 +196,7 @@ contract Math is SafeMath {
 
     @return Ether
 */
-    function DecimalToEther(uint256 _int) internal constant returns (uint256) {
+    function DecimalToEther(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_DE);
         return safeMul(_int, ETHER_DECIMAL);
     }
@@ -207,7 +206,7 @@ contract Math is SafeMath {
 
     @return Ether
 */
-    function FloatToEther(uint256 _int) internal constant returns (uint256) {
+    function FloatToEther(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_FE);
         return (safeMul(_int, ETHER_ONE)) >> PRECISION;
     }
@@ -217,7 +216,7 @@ contract Math is SafeMath {
 
     @return Float
 */
-    function EtherToFloat(uint256 _int) internal constant returns (uint256) {
+    function EtherToFloat(uint256 _int) internal pure returns (uint256) {
         assert(_int <= MAX_FE);
         return safeDiv((_int << PRECISION), ETHER_ONE);
     }
@@ -231,7 +230,7 @@ contract Math is SafeMath {
     @return sum
 */
     function add(uint256 _x, uint256 _y)
-    internal constant
+    internal pure
     returns (uint256) 
     {
         assert(_x <= MAX_F/2 && _y <= MAX_F/2);
@@ -249,7 +248,7 @@ contract Math is SafeMath {
     @return difference
 */
     function sub(uint256 _x, uint256 _y)
-    internal constant
+    internal pure
     returns (uint256) 
     {
         assert(_x <= MAX_F && _y <= MAX_F);
@@ -266,7 +265,7 @@ contract Math is SafeMath {
     @return product
 */
     function mul(uint256 _x, uint256 _y)
-    internal constant
+    internal pure
     returns (uint256) 
     {
         assert(_x <= 1<<128 && _y <= 1<<128);
@@ -292,7 +291,7 @@ contract Math is SafeMath {
     @return division
 */
     function div(uint256 _x, uint256 _y)
-    internal constant
+    internal pure
     returns (uint256) 
     {
         assert(_x <= MAX_F && _y <= MAX_F);
@@ -305,13 +304,12 @@ contract Math is SafeMath {
         return _z;
     }
 
-
 /**
         Exp is a 'improved' version of fixedExp, which automatically choose the proper precision.
         The precision is determine by the maximum value which is passed to fixedExp.
 */
     function Exp(uint256 _x) 
-    internal constant 
+    internal view 
     returns (uint256) 
     {
         if (_x <= maxExpArray[PRECISION]) {
@@ -331,7 +329,7 @@ contract Math is SafeMath {
         The maximum value which can be passed to fixedExpUnsafe depends on the precision used.
         The global maxExpArray maps each precision between 0 and 127 to the maximum value permitted.
 */
-    function fixedExp(uint256 _x, uint256 _precision) internal constant returns (uint256) {
+    function fixedExp(uint256 _x, uint256 _precision) internal view returns (uint256) {
         assert(_x <= maxExpArray[_precision]);
         return fixedExpUnsafe(_x, _precision);
     }
@@ -342,7 +340,7 @@ contract Math is SafeMath {
     It returns "e ^ (x >> precision) << precision", that is, the result is upshifted for accuracy.
     The maximum permitted value for _x depends on the value of _precision (see maxExpArray).
 */
-    function fixedExpUnsafe(uint256 _x, uint256 _precision) internal constant returns (uint256) {
+    function fixedExpUnsafe(uint256 _x, uint256 _precision) internal pure returns (uint256) {
         uint256 xi = _x;
         uint256 res = uint256(0xde1bc4d19efcac82445da75b00000000) << _precision;
 
@@ -427,7 +425,7 @@ contract Math is SafeMath {
     @return sigmoid
 */
     function sigmoid(uint256 _a, uint256 _b, uint256 _l, uint256 _d, uint256 _x)
-    internal constant
+    internal view
     returns (uint256)
     {
 

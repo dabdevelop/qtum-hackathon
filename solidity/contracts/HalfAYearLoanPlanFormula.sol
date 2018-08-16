@@ -14,7 +14,7 @@ contract HalfAYearLoanPlanFormula is LoanPlanFormula {
 /**
     @dev constructor
 */
-    function HalfAYearLoanPlanFormula() {
+    constructor() public {
         highRate = EtherToFloat(120000000000000000);   // 12%
         lowRate = EtherToFloat(30000000000000000);     // 3%
         loanDays = 180 days;

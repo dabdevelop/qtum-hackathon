@@ -17,7 +17,8 @@ contract DiscreditToken is SmartToken {
     @param _symbol     token short symbol, 1-6 characters
     @param _decimals   for display purposes only
 */
-    function DiscreditToken(string _name, string _symbol, uint8 _decimals)
+    constructor(string _name, string _symbol, uint8 _decimals)
+    public
     SmartToken(_name, _symbol, _decimals)
     {}
 }

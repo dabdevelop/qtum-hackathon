@@ -17,7 +17,7 @@ contract TokenHolder is ITokenHolder, Owned {
 /**
     @dev constructor
 */
-    function TokenHolder() {
+    constructor() public {
     }
 
 // validates an address - currently only checks that it isn't null

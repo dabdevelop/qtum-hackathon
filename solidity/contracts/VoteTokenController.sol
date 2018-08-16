@@ -4,7 +4,14 @@ import './interfaces/ISmartToken.sol';
 import './SmartTokenController.sol';
 
 contract VoteTokenController is SmartTokenController {
-    function VoteTokenController(ISmartToken _token)
+
+    /**
+    @dev constructor
+
+    @param _token   vote token
+    */
+    constructor(ISmartToken _token)
+    public
     SmartTokenController(_token) 
     {}
 }

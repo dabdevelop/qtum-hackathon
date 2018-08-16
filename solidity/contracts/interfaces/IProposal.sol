@@ -2,9 +2,9 @@ pragma solidity ^0.4.11;
 
 import './IOwned.sol';
 
-contract IProposal is IOwned {
+contract IProposal is IOwned{
 
-    function proposalContract() public constant returns (address proposalContract) {proposalContract;}
+    function proposalContract() public pure returns (address proposalContract){proposalContract;}
 
     function propose() public;
 

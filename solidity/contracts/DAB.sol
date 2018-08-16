@@ -39,7 +39,6 @@ contract DAB is IDAB, DABOperationManager {
     event LogFreezing(uint256 _time);
     event LogUpdateDABFormula(address _old, address _new);
 
-
 /**
     @dev constructor
 
@@ -48,10 +47,11 @@ contract DAB is IDAB, DABOperationManager {
     @param _startTime start time of the activation
 
 */
-    function DAB(
+    constructor(
     DABDepositAgent _depositAgent,
     DABCreditAgent _creditAgent,
     uint256 _startTime)
+    public
     validAddress(_depositAgent)
     validAddress(_creditAgent)
     DABOperationManager(_startTime)
@@ -173,7 +173,7 @@ contract DAB is IDAB, DABOperationManager {
         creditAgent.activate();
         walletFactory.activate();
         isActive = true;
-        LogActivation(now);
+        emit LogActivation(now);
     }
 
 /**
@@ -189,7 +189,7 @@ contract DAB is IDAB, DABOperationManager {
         creditAgent.freeze();
         walletFactory.freeze();
         isActive = false;
-        LogFreezing(now);
+        emit LogFreezing(now);
     }
 
 /*
@@ -219,7 +219,7 @@ contract DAB is IDAB, DABOperationManager {
     {
         depositAgent.setDABFormula(_formula);
         creditAgent.setDABFormula(_formula);
-        LogUpdateDABFormula(formula, _formula);
+        emit LogUpdateDABFormula(formula, _formula);
     }
 
 /**
@@ -228,7 +228,6 @@ contract DAB is IDAB, DABOperationManager {
 
     @param _loanPlanFormula         address of the loan plan formula contract
 */
-
     function addLoanPlanFormula(ILoanPlanFormula _loanPlanFormula)
     public
     validAddress(_loanPlanFormula)
@@ -247,7 +246,6 @@ contract DAB is IDAB, DABOperationManager {
 
     @param _loanPlanFormula         address of the loan plan
 */
-
     function disableLoanPlanFormula(ILoanPlanFormula _loanPlanFormula)
     public
     validAddress(_loanPlanFormula)
@@ -257,7 +255,6 @@ contract DAB is IDAB, DABOperationManager {
         walletFactory.disableLoanPlanFormula(_loanPlanFormula);
         loanPlanFormulaStatus[_loanPlanFormula].isValid = false;
     }
-
 
 /**
     @dev deposit QTUM
@@ -277,9 +274,8 @@ contract DAB is IDAB, DABOperationManager {
 
     }
 
-
 /**
-    @dev withdraw ethereum
+    @dev withdraw QTUM
 
     @param _dptAmount amount to withdraw (in deposit token)
 */
@@ -291,8 +287,6 @@ contract DAB is IDAB, DABOperationManager {
     {
         assert(depositAgent.withdraw(msg.sender, _dptAmount));
     }
-
-
 
 /**
     @dev cash credit token
@@ -308,14 +302,11 @@ contract DAB is IDAB, DABOperationManager {
         assert(creditAgent.cash(msg.sender, _cdtAmount));
     }
 
-
 /**
     @dev loan by credit token
 
     @param _cdtAmount amount to loan (in credit token)
 */
-
-
     function loan(uint256 _cdtAmount)
     public
     active
@@ -328,13 +319,10 @@ contract DAB is IDAB, DABOperationManager {
         assert(creditAgent.loan(wallet, _cdtAmount));
     }
 
-
-
 /**
-    @dev repay by ETH
+    @dev repay by QTUM
 
 */
-
     function repay()
     public
     payable
@@ -345,13 +333,10 @@ contract DAB is IDAB, DABOperationManager {
         assert(creditAgent.repay.value(msg.value)(msg.sender));
     }
 
-
 /**
-    @dev convert discredit token to credit token by paying the debt in ether
+    @dev convert discredit token to credit token by paying the debt in QTUM
 
 */
-
-
     function toCreditToken()
     public
     payable
@@ -362,13 +347,11 @@ contract DAB is IDAB, DABOperationManager {
         assert(creditAgent.toCreditToken.value(msg.value)(msg.sender));
     }
 
-
 /**
     @dev convert subCredit token to discredit token
 
     @param _sctAmount amount to convert (in subCredit token)
 */
-
     function toDiscreditToken(uint256 _sctAmount)
     public
     active

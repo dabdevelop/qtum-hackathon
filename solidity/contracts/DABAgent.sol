@@ -32,9 +32,10 @@ contract DABAgent is Owned, SafeMath {
     @param _formula      DAB formula
     @param _beneficiary      beneficiary address
 */
-    function DABAgent(
+    constructor(
     IDABFormula _formula,
     address _beneficiary)
+    public
     validAddress(_formula)
     validAddress(_beneficiary)
     {
@@ -94,5 +95,4 @@ contract DABAgent is Owned, SafeMath {
         require(_formula != formula);
         formula = _formula;
     }
-
 }

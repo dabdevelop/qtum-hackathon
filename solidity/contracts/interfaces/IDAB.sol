@@ -6,11 +6,11 @@ import './ISmartToken.sol';
 import './IDABFormula.sol';
 import './ILoanPlanFormula.sol';
 
-contract IDAB is IOwned {
+contract IDAB is IOwned{
 
-    function depositAgent() public constant returns (address depositAgent) {depositAgent;}
+    function depositAgent() public pure returns (address depositAgent) {depositAgent;}
 
-    function depositToken() public constant returns (ISmartToken depositToken) {depositToken;}
+    function depositToken() public pure returns (ISmartToken depositToken) {depositToken;}
 
     function setDABFormula(IDABFormula formula) public;
 

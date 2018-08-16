@@ -17,7 +17,7 @@ contract Owned is IOwned {
 /**
     @dev constructor
 */
-    function Owned() {
+    constructor() public {
         owner = msg.sender;
     }
 
@@ -44,7 +44,7 @@ contract Owned is IOwned {
 */
     function acceptOwnership() public {
         require(msg.sender == newOwner);
-        OwnerUpdate(owner, newOwner);
+        emit OwnerUpdate(owner, newOwner);
         owner = newOwner;
         newOwner = 0x0;
     }

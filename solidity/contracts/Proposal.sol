@@ -33,11 +33,12 @@ contract Proposal is IProposal, Owned, SafeMath {
     @param _proposalContract      contract proposed in proposal
     @param _duration      duration of proposal
 */
-    function Proposal(
+    constructor(
     IDABDao _dao,
     SmartTokenController _voteTokenController,
     address _proposalContract,
     uint256 _duration)
+    public
     validAddress(_dao)
     validAddress(_voteTokenController)
     validAmount(_duration) 

@@ -7,7 +7,7 @@ contract SafeMath {
 /**
     constructor
 */
-    function SafeMath() {
+    constructor() public {
     }
 
 /**
@@ -18,7 +18,7 @@ contract SafeMath {
 
     @return sum
 */
-    function safeAdd(uint256 _x, uint256 _y) internal constant returns (uint256) {
+    function safeAdd(uint256 _x, uint256 _y) internal pure returns (uint256) {
         uint256 z = _x + _y;
         assert(z >= _x);
         return z;
@@ -32,7 +32,7 @@ contract SafeMath {
 
     @return difference
 */
-    function safeSub(uint256 _x, uint256 _y) internal constant returns (uint256) {
+    function safeSub(uint256 _x, uint256 _y) internal pure returns (uint256) {
         assert(_x >= _y);
         return _x - _y;
     }
@@ -45,12 +45,11 @@ contract SafeMath {
 
     @return product
 */
-    function safeMul(uint256 _x, uint256 _y) internal constant returns (uint256) {
+    function safeMul(uint256 _x, uint256 _y) internal pure returns (uint256) {
         uint256 z = _x * _y;
         assert(_x == 0 || z / _x == _y);
         return z;
     }
-
 
 /**
     @dev returns the division of _x by _y, asserts if the calculation overflows
@@ -60,7 +59,7 @@ contract SafeMath {
 
     @return division
 */
-    function safeDiv(uint256 _x, uint256 _y) internal constant returns (uint256) {
+    function safeDiv(uint256 _x, uint256 _y) internal pure returns (uint256) {
         assert(_y > 0);
     // Solidity automatically throws when dividing by 0
         uint256 _z = _x / _y;

@@ -45,12 +45,13 @@ contract DABCreditAgent is DABAgent {
     @param _beneficiary address of beneficiary
 
 */
-    function DABCreditAgent(
+    constructor(
     IDABFormula _formula,
     SmartTokenController _creditTokenController,
     SmartTokenController _subCreditTokenController,
     SmartTokenController _discreditTokenController,
     address _beneficiary)
+    public
     validAddress(_creditTokenController)
     validAddress(_subCreditTokenController)
     validAddress(_discreditTokenController)
@@ -126,14 +127,12 @@ contract DABCreditAgent is DABAgent {
         isActive = false;
     }
 
-
 /**
     @dev set deposit agent
 
     @param _address address of deposit agent
 
 */
-
     function setDepositAgent(address _address)
     public
     ownerOnly
@@ -226,7 +225,6 @@ contract DABCreditAgent is DABAgent {
         discreditTokenController.acceptOwnership();
     }
 
-
 /**
     @dev issue credit token to users and founders
 
@@ -258,8 +256,8 @@ contract DABCreditAgent is DABAgent {
         balance = safeAdd(balance, msg.value);
 
     // event
-        LogCDTIssue(_user, msg.value, _uCDTAmount);
-        LogCDTIssue(beneficiary, 0, _fCDTAmount);
+        emit LogCDTIssue(_user, msg.value, _uCDTAmount);
+        emit LogCDTIssue(beneficiary, 0, _fCDTAmount);
 
         return true;
     }
@@ -286,7 +284,7 @@ contract DABCreditAgent is DABAgent {
 
         require(cdtBalance >= _cdtAmount);
 
-        var (ethAmount, cdtPrice) = formula.cash(balance, safeSub(credit.supply, creditBalance), _cdtAmount);
+        (uint256 ethAmount, uint256 cdtPrice) = formula.cash(balance, safeSub(credit.supply, creditBalance), _cdtAmount);
 
         assert(ethAmount > 0);
         assert(cdtPrice > 0);
@@ -300,7 +298,7 @@ contract DABCreditAgent is DABAgent {
         balance = safeSub(balance, ethAmount);
 
     // event
-        LogCash(_user, _cdtAmount, ethAmount);
+        emit LogCash(_user, _cdtAmount, ethAmount);
         return true;
     }
 
@@ -327,7 +325,7 @@ contract DABCreditAgent is DABAgent {
 
         require(interestRate > 0);
 
-        var (ethAmount, ethInterest, cdtIssuanceAmount, sctAmount) = formula.loan(_cdtAmount, interestRate, depositAgent.depositCurrentCRR());
+        (uint256 ethAmount, uint256 ethInterest, uint256 cdtIssuanceAmount, uint256 sctAmount) = formula.loan(_cdtAmount, interestRate, depositAgent.depositCurrentCRR());
 
         assert(ethAmount > 0);
         assert(ethInterest > 0);
@@ -350,7 +348,7 @@ contract DABCreditAgent is DABAgent {
         credit.supply = safeAdd(credit.supply, cdtIssuanceAmount);
 
     // event
-        LogLoan(_wallet, _cdtAmount, ethAmount, cdtIssuanceAmount, sctAmount);
+        emit LogLoan(_wallet, _cdtAmount, ethAmount, cdtIssuanceAmount, sctAmount);
         return true;
     }
 
@@ -376,7 +374,7 @@ contract DABCreditAgent is DABAgent {
 
         require(sctAmount > 0);
 
-        var (ethRefundAmount, cdtAmount, sctRefundAmount) = formula.repay(msg.value, sctAmount);
+        (uint256 ethRefundAmount, uint256 cdtAmount, uint256 sctRefundAmount) = formula.repay(msg.value, sctAmount);
 
         assert(cdtAmount > 0);
         assert(msg.value >= ethRefundAmount);
@@ -395,7 +393,7 @@ contract DABCreditAgent is DABAgent {
             balance = safeAdd(balance, safeSub(msg.value, ethRefundAmount));
 
 //         event
-            LogRepay(_user, safeSub(msg.value, ethRefundAmount), sctAmount, cdtAmount);
+            emit LogRepay(_user, safeSub(msg.value, ethRefundAmount), sctAmount, cdtAmount);
             return true;
         } else {
             assert(sctRefundAmount >= 0);
@@ -409,12 +407,11 @@ contract DABCreditAgent is DABAgent {
             balance = safeAdd(balance, msg.value);
 
         // event
-            LogRepay(_user, msg.value, safeSub(sctAmount, sctRefundAmount), cdtAmount);
+            emit LogRepay(_user, msg.value, safeSub(sctAmount, sctRefundAmount), cdtAmount);
             return true;
         }
 
     }
-
 
 /**
     @dev convert discredit token to credit token by paying the debt in ether
@@ -439,7 +436,7 @@ contract DABCreditAgent is DABAgent {
 
         require(dctAmount > 0);
 
-        var (ethRefundAmount, cdtAmount, dctRefundAmount) = formula.toCreditToken(msg.value, dctAmount);
+        (uint256 ethRefundAmount, uint256 cdtAmount, uint256 dctRefundAmount) = formula.toCreditToken(msg.value, dctAmount);
 
         assert(cdtAmount > 0);
         assert(msg.value >= ethRefundAmount);
@@ -458,7 +455,7 @@ contract DABCreditAgent is DABAgent {
             balance = safeAdd(balance, safeSub(msg.value, ethRefundAmount));
 
         // event
-            LogToCreditToken(_user, safeSub(msg.value, ethRefundAmount), dctAmount, cdtAmount);
+            emit LogToCreditToken(_user, safeSub(msg.value, ethRefundAmount), dctAmount, cdtAmount);
             return true;
         } else {
             assert(dctRefundAmount >= 0);
@@ -472,14 +469,11 @@ contract DABCreditAgent is DABAgent {
             balance = safeAdd(balance, msg.value);
 
         // event
-            LogToCreditToken(_user, msg.value, safeSub(dctAmount, dctRefundAmount), cdtAmount);
+            emit LogToCreditToken(_user, msg.value, safeSub(dctAmount, dctRefundAmount), cdtAmount);
             return true;
         }
 
     }
-
-
-
 
 /**
     @dev convert subCredit token to discredit token
@@ -488,7 +482,6 @@ contract DABCreditAgent is DABAgent {
 
     @return true if the function was successful, false if it wasn't
 */
-
     function toDiscreditToken(address _user, uint256 _sctAmount)
     public
     ownerOnly
@@ -505,7 +498,7 @@ contract DABCreditAgent is DABAgent {
 
         require(sctBalance >= _sctAmount);
 
-        var (dctAmount, cdtPrice) = formula.toDiscreditToken(balance, credit.supply, _sctAmount);
+        (uint256 dctAmount, uint256 cdtPrice) = formula.toDiscreditToken(balance, credit.supply, _sctAmount);
         assert(dctAmount > 0);
 
         creditPrice = cdtPrice;
@@ -521,7 +514,7 @@ contract DABCreditAgent is DABAgent {
         discredit.supply = safeAdd(discredit.supply, dctAmount);
 
     // event
-        LogToDiscreditToken(_user, _sctAmount, dctAmount);
+        emit LogToDiscreditToken(_user, _sctAmount, dctAmount);
         return true;
     }
 

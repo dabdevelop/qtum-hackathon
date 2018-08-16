@@ -6,18 +6,18 @@ pragma solidity ^0.4.11;
 */
 contract IERC20Token {
 // these functions aren't abstract since the compiler emits automatically generated getter functions as external
-    function name() public constant returns (string name) {name;}
+    function name() public pure returns (string name) {name;}
 
-    function symbol() public constant returns (string symbol) {symbol;}
+    function symbol() public pure returns (string symbol) {symbol;}
 
-    function decimals() public constant returns (uint8 decimals) {decimals;}
+    function decimals() public pure returns (uint8 decimals) {decimals;}
 
-    function totalSupply() public constant returns (uint256 totalSupply) {totalSupply;}
+    function totalSupply() public pure returns (uint256 totalSupply) {totalSupply;}
 
-    function balanceOf(address _owner) public constant returns (uint256 balance) {_owner;
+    function balanceOf(address _owner) public pure returns (uint256 balance) {_owner;
         balance;}
 
-    function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {_owner;
+    function allowance(address _owner, address _spender) public pure returns (uint256 remaining) {_owner;
         _spender;
         remaining;}
 

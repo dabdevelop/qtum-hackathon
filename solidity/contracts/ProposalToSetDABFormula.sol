@@ -18,11 +18,12 @@ contract ProposalToSetDABFormula is Proposal {
     @param _proposalContract      contract proposed in proposal
     @param _duration      duration of proposal
 */
-    function ProposalToSetDABFormula(
+    constructor(
     IDABDao _dao,
     SmartTokenController _voteTokenController,
     address _proposalContract,
     uint256 _duration)
+    public
     Proposal(_dao, _voteTokenController, _proposalContract, _duration)
     {}
 

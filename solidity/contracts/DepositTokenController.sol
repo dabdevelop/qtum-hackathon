@@ -14,7 +14,8 @@ contract DepositTokenController is SmartTokenController {
 
     @param _token   deposit token
 */
-    function DepositTokenController(ISmartToken _token)
+    constructor(ISmartToken _token)
+    public
     SmartTokenController(_token)
     {}
 }

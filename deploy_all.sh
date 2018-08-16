@@ -3,6 +3,7 @@
 # json parser need to pre-install jq https://github.com/stedolan/jq
 # solc should use option `--evm-version homestead `
 
+# export QTUM_SENDER=qLciaCb19kqqaPVeEQyjjViVBqpJdVvRkx
 export QTUM_SENDER=qeDKhVC2rqpWQpwty52UsE9Nsi1jUarsyJ
 export QTUM_RPC=http://qtum:test@localhost:3889
 export GAS_LIMIT=40000000

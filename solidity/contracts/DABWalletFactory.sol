@@ -52,9 +52,10 @@ contract DABWallet is Owned, SafeMath {
     @param _dab     the address of dab
     @param _user     the address of a _user
 */
-    function DABWallet(
+    constructor(
     DAB _dab,
     address _user)
+    public
     validAddress(_dab)
     validAddress(_user)
     {
@@ -127,36 +128,36 @@ contract DABWallet is Owned, SafeMath {
     }
 
 /**
-    @dev deposit ETH
+    @dev deposit QTUM
 
 */
-    function depositETH()
+    function depositQTUM()
     public
     payable
     validAmount(msg.value)
     {}
 
 /**
-    @dev withdraw ETH
+    @dev withdraw QTUM
     only called by user
 
     @param _ethAmount         amount of ETH to withdraw
 */
-    function withdrawETH(uint256 _ethAmount)
+    function withdrawQTUM(uint256 _ethAmount)
     public
     userOnly
     validAmount(_ethAmount)
     {
-        transferETH(msg.sender, _ethAmount);
+        transferQTUM(msg.sender, _ethAmount);
     }
 
 /**
-    @dev transfer ETH
+    @dev transfer QTUM
     only called by user
 
     @param _ethAmount         amount of ETH to transfer
 */
-    function transferETH(address _address, uint256 _ethAmount)
+    function transferQTUM(address _address, uint256 _ethAmount)
     public
     userOnly
     validAddress(_address)
@@ -332,7 +333,7 @@ contract DABWallet is Owned, SafeMath {
     {
         uint256 cdtSupply = creditToken.totalSupply();
         uint256 sctSupply = subCreditToken.totalSupply();
-        var (_interestRate, _loanDays, _exemptDays) = formula.getLoanPlan(safeAdd(cdtSupply, sctSupply), cdtSupply);
+        (uint256 _interestRate, uint256 _loanDays, uint256 _exemptDays) = formula.getLoanPlan(safeAdd(cdtSupply, sctSupply), cdtSupply);
         interestRate = _interestRate;
         loanDays = _loanDays;
         exemptDays = _exemptDays;
@@ -442,7 +443,7 @@ contract DABWallet is Owned, SafeMath {
         address oldUser = user;
         user = newUser;
         newUser = 0x0;
-        LogUpdateWalletOwnership(oldUser, user);
+        emit LogUpdateWalletOwnership(oldUser, user);
     }
 
 /**
@@ -460,7 +461,7 @@ contract DABWallet is Owned, SafeMath {
         address oldFormula = formula;
         formula = _formula;
         needRenew = true;
-        LogUpdateLoanPlanFormula(oldFormula, formula);
+        emit LogUpdateLoanPlanFormula(oldFormula, formula);
     }
 
 /**
@@ -530,10 +531,9 @@ contract DABWallet is Owned, SafeMath {
     @dev fallback
 */
     function() payable {
-        depositETH();
+        depositQTUM();
     }
 }
-
 
 /*
     DABWalletFactory v0.1
@@ -568,7 +568,8 @@ contract DABWalletFactory is Owned {
 
     @param _dab     the address of dab
 */
-    function DABWalletFactory(DAB _dab)
+    constructor(DAB _dab)
+    public
     validAddress(_dab)
     {
         dab = _dab;
@@ -643,9 +644,8 @@ contract DABWalletFactory is Owned {
         require(!loanPlanFormulas[_loanPlanFormula].isValid); // validate input
         loanPlanFormulasList.push(_loanPlanFormula);
         loanPlanFormulas[_loanPlanFormula].isValid = true;
-        LogAddLoanPlanFormula(_loanPlanFormula);
+        emit LogAddLoanPlanFormula(_loanPlanFormula);
     }
-
 
 /**
     @dev disable a loan plan
@@ -661,7 +661,7 @@ contract DABWalletFactory is Owned {
     validLoanPlanFormula(_loanPlanFormula)
     {
         loanPlanFormulas[_loanPlanFormula].isValid = false;
-        LogDisableLoanPlanFormula(_loanPlanFormula);
+        emit LogDisableLoanPlanFormula(_loanPlanFormula);
     }
 
 /**
@@ -679,7 +679,7 @@ contract DABWalletFactory is Owned {
         wallets[wallet].isValid = true;
         wallets[wallet].loanPlanFormula = ILoanPlanFormula(0x0);
         walletCount = walletCount + 1;
-        LogNewWallet(msg.sender, wallet);
+        emit LogNewWallet(msg.sender, wallet);
     }
 
 /**
@@ -706,6 +706,7 @@ contract DABWalletFactory is Owned {
     function isWalletFormulaValid(DABWallet _wallet)
     public
     active
+    view
     validWallet(_wallet)
     returns (bool)
     {

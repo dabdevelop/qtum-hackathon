@@ -44,9 +44,10 @@ contract DABDao is IDABDao, SafeMath {
     @param _dab DAB contract
     @param _formula DAB DAO formula contract
 */
-    function DABDao(
+    constructor(
     IDAB _dab,
     IDABDaoFormula _formula)
+    public
     validAddress(_dab)
     validAddress(_formula) 
     {
@@ -110,7 +111,7 @@ contract DABDao is IDABDao, SafeMath {
         assert(depositToken.transferFrom(_proposal, depositAgent, proposalPrice));
         proposals.push(_proposal);
         proposalStatus[_proposal].isValid = true;
-        LogPropose(now, _proposal);
+        emit LogPropose(now, _proposal);
     }
 
 /**
@@ -145,7 +146,7 @@ contract DABDao is IDABDao, SafeMath {
         IDABFormula formula = IDABFormula(proposalContract);
         dab.setDABFormula(formula);
         proposalStatus[proposal].isValid = false;
-        LogSetDABFormula(now, proposal);
+        emit LogSetDABFormula(now, proposal);
     }
 
 /**
@@ -163,7 +164,7 @@ contract DABDao is IDABDao, SafeMath {
         ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
         dab.addLoanPlanFormula(formula);
         proposalStatus[proposal].isValid = false;
-        LogAddLoanPlanFormula(now, proposal);
+        emit LogAddLoanPlanFormula(now, proposal);
     }
 
 /**
@@ -181,7 +182,7 @@ contract DABDao is IDABDao, SafeMath {
         ILoanPlanFormula formula = ILoanPlanFormula(proposalContract);
         dab.disableLoanPlanFormula(formula);
         proposalStatus[proposal].isValid = false;
-        LogDisableLoanPlanFormula(now, proposal);
+        emit LogDisableLoanPlanFormula(now, proposal);
     }
 
 /**
@@ -198,7 +199,7 @@ contract DABDao is IDABDao, SafeMath {
         address proposalContract = proposal.proposalContract();
         dab.transferOwnership(proposalContract);
         proposalStatus[proposal].isValid = false;
-        LogTransferDABOwnership(now, proposal);
+        emit LogTransferDABOwnership(now, proposal);
     }
 
 /**
@@ -214,7 +215,7 @@ contract DABDao is IDABDao, SafeMath {
         IProposal proposal = IProposal(msg.sender);
         dab.acceptOwnership();
         proposalStatus[proposal].isValid = false;
-        LogAcceptDABOwnership(now, proposal);
+        emit LogAcceptDABOwnership(now, proposal);
     }
 
 }

@@ -14,10 +14,10 @@ contract AYearLoanPlanFormula is LoanPlanFormula {
 /**
     @dev constructor
 */
-    function AYearLoanPlanFormula() {
+    constructor() public {
         highRate = EtherToFloat(240000000000000000);  // 24%
         lowRate = EtherToFloat(60000000000000000);    // 6%
-        loanDays = 1 years;
+        loanDays = 365 days;
         exemptDays = 20 days;
     }
 
